@@ -1,0 +1,116 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>SCRUM-5 Test Plan</title>
+  <style>
+    @page { size: A4; margin: 18mm 16mm 18mm 16mm; @bottom-right { content: "Page " counter(page) " of " counter(pages); font-size: 10px; color: #51606e; } }
+    body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; color: #1f2933; background: #fff; font-size: 11px; line-height: 1.45; }
+    .page { padding: 8mm 10mm; }
+    .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #d9e2ec; padding-bottom: 10px; margin-bottom: 8px; }
+    .logo { height: 42px; }
+    .meta { font-size: 10px; text-align: right; color: #52606d; }
+    h1, h2, h3, h4 { color: #102a43; margin: 0.7em 0 0.35em; }
+    h1 { font-size: 24px; margin-top: 0.2em; }
+    h2 { font-size: 16px; border-bottom: 1px solid #edf2f7; padding-bottom: 3px; }
+    h3 { font-size: 13px; }
+    p, li { margin: 0.35em 0; }
+    ul, ol { padding-left: 18px; }
+    table { width: 100%; border-collapse: collapse; margin: 10px 0; page-break-inside: avoid; }
+    th, td { border: 1px solid #d9e2ec; padding: 6px 7px; vertical-align: top; text-align: left; }
+    th { background: #f0f4f8; font-weight: 600; }
+    strong { color: #102a43; }
+    .status { font-weight: 600; color: #8b2e2e; }
+    .small { font-size: 10px; }
+  </style>
+</head>
+<body>
+<div class="page">
+  <div class="header">
+    <img class="logo" src="data:image/png;base64,' + $logoBase64 + '" alt="Company logo" />
+    <div class="meta">VWO / Bingify product context<br/>A/B testing platform</div>
+  </div>
+  <h1>Test Plan — SCRUM-5: Implement Refund API with Full and Partial Refund Support</h1>
+  <p class="status">Status: DRAFT — pending human review. Not approved until a QA owner signs off.</p>
+
+  <h2>1. Scope &amp; Objectives</h2>
+  <ul>
+    <li><strong>In scope:</strong> refund eligibility checks, full and partial refund flows, refund amount validation, unique refund IDs, idempotency behavior, status lookup and lifecycle states.</li>
+    <li><strong>Out of scope:</strong> payment gateway settlement processing, finance reconciliation, UI flows, customer notifications, external accounting or ERP integration.</li>
+    <li><strong>Objective:</strong> confirm that only successful payments can be refunded, that refund amounts never exceed the remaining refundable balance, that duplicate requests are deduplicated, and that refund status can be queried reliably.</li>
+  </ul>
+
+  <h2>2. Gaps &amp; Questions for the author</h2>
+  <table>
+    <thead><tr><th>#</th><th>Area</th><th>Finding (⚠️/❌)</th><th>Question to author</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Refund eligibility</td><td>⚠️</td><td>Which non-successful payment states should be rejected (for example Pending, Failed, Cancelled)?</td></tr>
+      <tr><td>2</td><td>Refund amount rules</td><td>⚠️</td><td>Is the minimum allowed refund amount defined? Are there limits for the number of partial refunds per payment?</td></tr>
+      <tr><td>3</td><td>Idempotency contract</td><td>⚠️</td><td>What is the idempotency key TTL and what should happen when the same key is reused with a different payload?</td></tr>
+      <tr><td>4</td><td>Status lifecycle</td><td>⚠️</td><td>Which status transitions are valid, and are all statuses persisted for retrieval / audit?</td></tr>
+      <tr><td>5</td><td>Authorization &amp; roles</td><td>❌</td><td>Who can create or query refund records: merchant, admin, support, or customer?</td></tr>
+      <tr><td>6</td><td>Environment &amp; test data</td><td>❌</td><td>Which environments, feature flags, currencies, and seed data are required for test execution?</td></tr>
+    </tbody>
+  </table>
+
+  <h2>3. Test Scenarios</h2>
+  <table>
+    <thead><tr><th>ID</th><th>Priority</th><th>Type</th><th>Scenario</th><th>Maps to</th></tr></thead>
+    <tbody>
+      <tr><td>TS-01</td><td>P0</td><td>pos</td><td>Refund request succeeds for a previously successful payment with an amount within the remaining balance.</td><td>AC-1, AC-2, AC-4</td></tr>
+      <tr><td>TS-02</td><td>P0</td><td>pos</td><td>Full refund request for the remaining balance is accepted and processed successfully.</td><td>AC-2, AC-4</td></tr>
+      <tr><td>TS-03</td><td>P0</td><td>pos</td><td>Partial refund request is accepted and reduces the remaining refundable balance without exceeding it.</td><td>AC-2, AC-4</td></tr>
+      <tr><td>TS-04</td><td>P0</td><td>neg</td><td>Refund request for a pending or failed payment is rejected.</td><td>AC-1, Gap-1</td></tr>
+      <tr><td>TS-05</td><td>P0</td><td>neg</td><td>Refund request with an invalid or non-existent payment ID is rejected.</td><td>AC-8, Gap-6</td></tr>
+      <tr><td>TS-06</td><td>P0</td><td>neg</td><td>Refund amount greater than the remaining refundable balance is rejected.</td><td>AC-3, AC-2</td></tr>
+      <tr><td>TS-07</td><td>P0</td><td>neg</td><td>Refund request with amount 0 or negative value is rejected.</td><td>Gap-2</td></tr>
+      <tr><td>TS-08</td><td>P0</td><td>pos</td><td>Multiple distinct refund requests receive unique refund IDs.</td><td>AC-4</td></tr>
+      <tr><td>TS-09</td><td>P0</td><td>pos</td><td>Re-request with the same idempotency key returns the same outcome and does not create duplicate refunds.</td><td>AC-5</td></tr>
+      <tr><td>TS-10</td><td>P1</td><td>pos</td><td>Refund status can be retrieved using the refund ID for Pending, Success, and Failed states.</td><td>AC-6, AC-7, Gap-4</td></tr>
+      <tr><td>TS-11</td><td>P1</td><td>boundary</td><td>Refund process at the exact remaining balance boundary succeeds; any attempt above the balance fails.</td><td>AC-2</td></tr>
+      <tr><td>TS-12</td><td>P1</td><td>neg</td><td>Same idempotency key with a different payload is rejected or handled according to policy.</td><td>AC-5, Gap-3</td></tr>
+    </tbody>
+  </table>
+
+  <h2>4. Test Data &amp; Environment</h2>
+  <ul>
+    <li><strong>Data:</strong> successful payments, failed/pending/cancelled payments, existing refund history, payment records with partial refunds already applied, invalid payment IDs, duplicate idempotency keys.</li>
+    <li><strong>Environment / flags:</strong> QA or staging environment, refund API enabled, idempotency store active, payment records seeded, gateway mock or simulator enabled for status transitions.</li>
+    <li><strong>Roles / permissions:</strong> Merchant and admin roles should be explicitly confirmed; customer-facing or support actions are not defined in the ticket.</li>
+  </ul>
+
+  <h2>5. Risks &amp; Assumptions</h2>
+  <ul>
+    <li><strong>Assumptions made:</strong> the refund endpoint is a backend API; the system keeps an idempotency store and refund records; status values are <code>Pending</code>, <code>Success</code>, and <code>Failed</code>.</li>
+    <li><strong>Risks:</strong> duplicate or race-condition requests, incorrect balance calculation after multiple partial refunds, delayed or inconsistent status transitions, lack of authorization guardrails.</li>
+  </ul>
+
+  <h2>6. Entry / Exit criteria</h2>
+  <ul>
+    <li><strong>Entry:</strong> refund API service is deployed to the target environment; test data is seeded; payment and refund stores are available; feature flags and dependency mocks are enabled.</li>
+    <li><strong>Exit:</strong> all P0 scenarios pass, no defect remains open for the primary refund path, all open questions are reviewed, and the plan is signed off by a QA owner.</li>
+  </ul>
+
+  <h2>7. Resource Allocation</h2>
+  <ul>
+    <li>QA engineer: test plan review, scenario execution, defect triage</li>
+    <li>Backend engineer: refund logic validation and defect analysis</li>
+    <li>Product owner / business owner: requirement clarification on authorization and lifecycle rules</li>
+  </ul>
+
+  <h2>8. Timelines, Sprint Details</h2>
+  <ul>
+    <li><strong>Sprint / target version:</strong> Not specified in ticket; treated as TBD until the author confirms the planned release window.</li>
+    <li><strong>Timeline:</strong> No dates are specified in the ticket; schedule to be filled by the project team.</li>
+  </ul>
+
+  <h2>Human Review Gate</h2>
+  <ul>
+    <li><strong>I assumed:</strong> the ticket is a backend API feature for refund creation and status lookup; the issue description is the source of truth; the product context is VWO / Bingify A/B testing platform.</li>
+    <li><strong>I could not confirm:</strong> authorization roles, exact non-successful payment states, idempotency TTL, status transition rules, and whether a minimum refund value or refund cap exists.</li>
+    <li><strong>Open questions blocking sign-off:</strong> Which non-successful payment states are rejected? What is the idempotency key policy? Which roles can perform refunds? Do we need a minimum refund or maximum number of partial refunds?</li>
+    <li><strong>Approve, or edit, before I write test cases / automation.</strong></li>
+  </ul>
+</div>
+</body>
+</html>

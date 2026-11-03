@@ -1,0 +1,324 @@
+{
+  "key": "SCRUM-5",
+  "summary": "Implement Refund API with Full and Partial Refund Support",
+  "type": "Feature",
+  "priority": "Medium",
+  "components": [],
+  "labels": [],
+  "fixVersions": [],
+  "description": {
+    "type": "doc",
+    "version": 1,
+    "content": [
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "User Story"
+          }
+        ],
+        "attrs": {
+          "localId": "fed1114f154e"
+        }
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "As a merchant, I want to initiate full or partial refunds for successful payments so that I can return money to customers without creating duplicate or excessive refunds."
+          }
+        ],
+        "attrs": {
+          "localId": "a43ab207e7f8"
+        }
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "Acceptance Criteria"
+          }
+        ],
+        "attrs": {
+          "localId": "ef32f086ed5d"
+        }
+      },
+      {
+        "type": "orderedList",
+        "attrs": {
+          "order": 1,
+          "localId": "440af6200b2d"
+        },
+        "content": [
+          {
+            "type": "listItem",
+            "attrs": {
+              "localId": "6584e9a3266b"
+            },
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Only successful payments are eligible for refunds."
+                  }
+                ],
+                "attrs": {
+                  "localId": "bfd11cd0c5f0"
+                }
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "attrs": {
+              "localId": "8087275cbf8e"
+            },
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Full and partial refunds must be supported."
+                  }
+                ],
+                "attrs": {
+                  "localId": "da04912002c0"
+                }
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "attrs": {
+              "localId": "835b28f35db5"
+            },
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Refund amounts must not exceed the remaining refundable balance."
+                  }
+                ],
+                "attrs": {
+                  "localId": "a5f752cdbe18"
+                }
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "attrs": {
+              "localId": "c4cbad700d09"
+            },
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Every refund must receive a unique refund ID."
+                  }
+                ],
+                "attrs": {
+                  "localId": "0b6c17c7f852"
+                }
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "attrs": {
+              "localId": "618c278313d9"
+            },
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Requests with the same idempotency key must not create duplicate refunds."
+                  }
+                ],
+                "attrs": {
+                  "localId": "fda2796fa860"
+                }
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "attrs": {
+              "localId": "e2b29d9df979"
+            },
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Refund status must be retrievable using the refund ID."
+                  }
+                ],
+                "attrs": {
+                  "localId": "dbba71fa98e5"
+                }
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "attrs": {
+              "localId": "ba85a5d49021"
+            },
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Supported statuses are Pending, Success and Failed."
+                  }
+                ],
+                "attrs": {
+                  "localId": "81f28387398c"
+                }
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "attrs": {
+              "localId": "0b0d5845128f"
+            },
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Invalid payment IDs and invalid refund amounts must be rejected."
+                  }
+                ],
+                "attrs": {
+                  "localId": "ac5048966228"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "Definition of Done"
+          }
+        ],
+        "attrs": {
+          "localId": "46c318939e69"
+        }
+      },
+      {
+        "type": "bulletList",
+        "content": [
+          {
+            "type": "listItem",
+            "attrs": {
+              "localId": "14a35b463dbd"
+            },
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Refund APIs implemented and documented."
+                  }
+                ],
+                "attrs": {
+                  "localId": "6cf30a427de9"
+                }
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "attrs": {
+              "localId": "f8e3ed073eb8"
+            },
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Automated tests added for critical flows."
+                  }
+                ],
+                "attrs": {
+                  "localId": "890cdb493452"
+                }
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "attrs": {
+              "localId": "717980254ef2"
+            },
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Positive, negative and integration scenarios reviewed."
+                  }
+                ],
+                "attrs": {
+                  "localId": "61e8beb15d83"
+                }
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "attrs": {
+              "localId": "10bd7d55dcb1"
+            },
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "No open critical or high-severity defects."
+                  }
+                ],
+                "attrs": {
+                  "localId": "23b7a1356b2c"
+                }
+              }
+            ]
+          }
+        ],
+        "attrs": {
+          "localId": "b84446db962b"
+        }
+      }
+    ]
+  },
+  "links": [],
+  "attachments": [
+    "Refund_API_PRD_Attachment.md"
+  ]
+}
