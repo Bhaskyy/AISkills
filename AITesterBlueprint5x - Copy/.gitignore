@@ -1,0 +1,7 @@
+# Local secrets (Jira credentials used by scripts/fetch-jira.sh)
+.env
+.env.*
+!.env.example
+
+# OS files
+.DS_Store
